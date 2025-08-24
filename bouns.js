@@ -61,9 +61,49 @@ function saveUsers(users, dbFile) {
     }
 }
 
+/**
+ * This function will save logged in user to a file named "data/loggedInUser.json"
+ *
+ * @param {{username: string, email: string, role: 'ADMIN' | 'USER'}} user
+ *     This is the user object that will be saved to the file
+ */
+function saveLoggedInUser(user) {
+    const data = JSON.stringify(user, null, 2);
+    try {
+        fs.writeFileSync("loggedInUser.json", data, 'utf8');
+    } catch (err) {
+        console.error(`Error saving logged in user to loggedInUser.json:`, err);
+    }
+}
+
+/**
+ * This function will load logged in user from a file named "data/loggedInUser.json"
+ * if file does not exist or file is empty it will return null
+ *
+ * @returns {{username: string, email: string, role: 'ADMIN' | 'USER'} | null} user
+ *     This is the user object that will be loaded from the file or null
+ *     if file does not exist or file is empty
+ */
+function loadLoggedInUser() {
+    try {
+        const data = fs.readFileSync("loggedInUser.json", 'utf8');
+        if (data) {
+            return JSON.parse(data);
+        } else {
+            return null;
+        }
+    } catch (err) {
+        console.error(`Error loading logged in user from loggedInUser.json:`, err);
+        return null;
+    }
+}
+
+
 module.exports = {
     loadUsers,
     loadTasks,
     saveTasks,
-    saveUsers
+    saveUsers,
+    saveLoggedInUser,
+    loadLoggedInUser
 };
